@@ -1,0 +1,44 @@
+spring:
+  profiles.active: default
+  main.banner-mode: off
+  datasource:
+    url: jdbc:h2:mem:mydb;DB_CLOSE_ON_EXIT=FALSE
+    username: sa
+    password: password
+    driverClassName: org.h2.Driver
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: create-drop
+feign:
+  client:
+    config:
+      default:
+        connectTimeout: 3000
+        readTimeout: 3000
+  autoconfiguration:
+    jackson:
+      enabled: true
+logging.level.root: WARN
+console:
+  ssh:
+    connection:
+      username: monitor
+      password: password
+      host: 10.50.100.3
+      port: 13022
+      strictHostKey: "no"
+      executionTimeoutMillis: 3000
+  command:
+    bannedData: "sudo fail2ban-client status | sed -n \"s/,//g;s/.*Jail list://p\" | xargs -n1 sudo fail2ban-client status | grep \"Banned IP\\|Status\""
+    unbanHost: "sudo fail2ban-client unban %s"
+whois:
+  url: "http://ipwhois.app/json"
+storage:
+  whoIsExpirationPeriodDays: 31
+unban:
+  # Wildcard matching by ip. * - many symbols, ? - one symbol
+  whiteList: [ "10.50.100.*" ]
+  # Complete matching by field.
+  whoisRules:
+    countryCode: [ UA ]

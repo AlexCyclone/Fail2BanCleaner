@@ -1,0 +1,52 @@
+spring:
+  profiles.active: test
+  main.banner-mode: off
+  datasource:
+    url: jdbc:h2:mem:mydb
+    username: sa
+    password: password
+    driverClassName: org.h2.Driver
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: create-drop
+logging:
+  level:
+    root: INFO
+feign:
+  client:
+    config:
+      default:
+        connectTimeout: 3000
+        readTimeout: 3000
+  autoconfiguration:
+    jackson:
+      enabled: true
+console:
+  ssh:
+    connection:
+      username: testuser
+      password: testpassword
+      host: testhost
+      port: 22
+      strictHostKey: "no"
+      executionTimeoutMillis: 1000
+  command:
+    bannedData: "banned"
+    unbanHost: "unban %s"
+storage:
+  whoIsExpirationPeriodDays: 31
+  csv:
+    strictMode: true
+whois:
+  url: "http://localhost:${wiremock.server.port}/json"
+
+unban:
+  # Wildcard matching by ip. * - many symbols, ? - one symbol
+  whiteList: [ "10.50.100.*" ]
+  # Complete matching by field.
+  whoisRules:
+    countryCode: [ "UA", "GB" ]
+    latitude: [ 37.3860518 ]
+    success: [ false ]
+    unbannedCount: [ 99 ]
