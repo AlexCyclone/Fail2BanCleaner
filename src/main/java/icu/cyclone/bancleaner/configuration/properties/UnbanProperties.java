@@ -8,6 +8,8 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @Data
 @ConfigurationProperties(prefix = "unban")
 public class UnbanProperties {
+    private List<String> blackList;
+    private Map<String, List<String>> blackListRules;
     private List<String> whiteList;
-    private Map<String, List<String>> whoisRules;
+    private Map<String, List<String>> whiteListRules;
 }

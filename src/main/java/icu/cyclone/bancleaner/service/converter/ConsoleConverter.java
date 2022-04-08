@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class ConsoleConverter {
-    private static Logger LOGGER = LoggerFactory.getLogger(ConsoleConverter.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ConsoleConverter.class);
     private static final String BANNED_LINE_SIGNATURE = "Banned IP list";
     private static final String START_BANNED_LINE_REGEXP = ".*" + BANNED_LINE_SIGNATURE + "[\\p{P}\\s]+";
     private static final String EMPTY_STRING = "";

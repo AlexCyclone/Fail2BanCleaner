@@ -41,7 +41,13 @@ storage:
   whoIsExpirationPeriodDays: 31
 unban:
   # Wildcard matching by ip. * - many symbols, ? - one symbol
+  blackList: [ "185.253.42.209" ]
+  # Complete matching by field.
+  blackListRules:
+    region: [ "Donetsk Oblast" ]
+    city: [ "Donetsk Oblast" ]
+  # Wildcard matching by ip.
   whiteList: [ "10.50.100.*" ]
   # Complete matching by field.
-  whoisRules:
+  whiteListRules:
     countryCode: [ UA ]

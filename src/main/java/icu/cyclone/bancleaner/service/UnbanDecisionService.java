@@ -3,6 +3,8 @@ package icu.cyclone.bancleaner.service;
 import icu.cyclone.bancleaner.configuration.properties.UnbanProperties;
 import icu.cyclone.bancleaner.domain.HostInfo;
 import icu.cyclone.bancleaner.service.converter.UnbanConverter;
+import java.util.List;
+import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,30 +20,48 @@ public class UnbanDecisionService {
     private final UnbanConverter converter;
 
     public boolean isUnban(HostInfo hostInfo) {
-        return inWhiteList(hostInfo) || inWhoisRules(hostInfo);
+        if (inBlackList(hostInfo) || inBlackListRules(hostInfo)) {
+            return false;
+        }
+        return inWhiteList(hostInfo) || inWhiteListRules(hostInfo);
+    }
+
+    private boolean inBlackList(HostInfo hostInfo) {
+        return isPresentInList(hostInfo, properties.getBlackList());
+    }
+
+    private boolean inBlackListRules(HostInfo hostInfo) {
+        return isPresentInListRules(hostInfo, properties.getBlackListRules());
     }
 
     private boolean inWhiteList(HostInfo hostInfo) {
+        return isPresentInList(hostInfo, properties.getWhiteList());
+    }
+
+    private boolean inWhiteListRules(HostInfo hostInfo) {
+        return isPresentInListRules(hostInfo, properties.getWhiteListRules());
+    }
+
+    private boolean isPresentInList(HostInfo hostInfo, List<String> list) {
         var ip = hostInfo.getIp();
-        var successRegex = properties.getWhiteList().stream()
+        var successRegex = list.stream()
             .map(converter::toRegex)
             .filter(ip::matches)
             .findAny();
 
         if (successRegex.isPresent()) {
-            LOGGER.debug("Host " + ip + " in whitelist by regex: " + successRegex.get());
+            LOGGER.info("Host " + ip + " found by regex: " + successRegex.get());
             return true;
         }
-
         return false;
     }
 
-    private boolean inWhoisRules(HostInfo hostInfo) {
-        var rulesMap = properties.getWhoisRules();
-        var fieldNames = rulesMap.keySet();
+    private boolean isPresentInListRules(HostInfo hostInfo, Map<String, List<String>> listRules) {
+        var fieldNames = listRules.keySet();
         for (var fieldName : fieldNames) {
             var value = getStringValue(fieldName, hostInfo);
-            if (value != null && rulesMap.get(fieldName).contains(value)) {
+            if (value != null && listRules.get(fieldName).contains(value)) {
+                LOGGER.info("Host " + hostInfo.getIp() + " found by field " + fieldName + ": " + value);
                 return true;
             }
         }

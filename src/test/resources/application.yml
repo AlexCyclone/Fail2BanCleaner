@@ -42,10 +42,12 @@ whois:
   url: "http://localhost:${wiremock.server.port}/json"
 
 unban:
-  # Wildcard matching by ip. * - many symbols, ? - one symbol
+  blackList: [ "172.31.0.5" ]
+  blackListRules:
+    region: [ "Donetsk Oblast" ]
+    city: [ "Donetsk Oblast" ]
   whiteList: [ "10.50.100.*" ]
-  # Complete matching by field.
-  whoisRules:
+  whiteListRules:
     countryCode: [ "UA", "GB" ]
     latitude: [ 37.3860518 ]
     success: [ false ]
