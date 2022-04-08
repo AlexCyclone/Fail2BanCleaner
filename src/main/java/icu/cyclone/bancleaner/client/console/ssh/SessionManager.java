@@ -37,7 +37,7 @@ class SessionManager implements AutoCloseable {
     public void close() {
         if (session != null) {
             session.disconnect();
-            LOGGER.info("SSH session closed");
+            LOGGER.debug("SSH session closed");
         }
     }
 }

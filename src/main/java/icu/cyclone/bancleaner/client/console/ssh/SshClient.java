@@ -33,14 +33,13 @@ public class SshClient implements ConsoleClient {
             var responseStream = new ByteArrayOutputStream();
             channel.setOutputStream(responseStream);
 
-            LOGGER.debug("Execute shell command");
+            LOGGER.debug("Executing shell command: '{}'", command);
             channel.connect();
             await(channel, timeoutMillis);
 
             return responseStream.toString();
         } catch (JSchException e) {
-            LOGGER.error("Failed during execution shell command: " + command, e);
-            throw new SshClientException("Connection exception", e);
+            throw new SshClientException("Failed during execution shell command: " + command, e);
         }
     }
 
@@ -51,7 +50,7 @@ public class SshClient implements ConsoleClient {
                 Thread.sleep(AWAIT_STEP);
             }
         } catch (InterruptedException e) {
-            throw new SshClientException("Execution interrupted", e);
+            throw new SshClientException("SSH command execution interrupted", e);
         }
 
         if (channel.isConnected()) {

@@ -36,20 +36,21 @@ public class CsvStorageClient implements StorageClient {
     @Override
     public void save(Iterable<StorageHostInfoDto> hostInfoList) {
         if (!csvStorageProperties.isEnabled()) {
+            LOGGER.debug("CSV storage disabled");
             return;
         }
 
         var storagePath = Path.of(csvStorageProperties.getPath(), csvStorageProperties.getFileName());
         try (var writer = Files.newBufferedWriter(storagePath)) {
+            LOGGER.debug("Writing data to storage file: '{}'", storagePath);
             CSV_MAPPER.writer(SCHEMA)
                 .writeValues(writer)
                 .writeAll(hostInfoList);
         } catch (IOException e) {
             if (csvStorageProperties.isStrictMode()) {
-                LOGGER.error("Can not write datafile: " + storagePath, e);
                 throw new CsvStorageException("Can not write datafile: " + storagePath, e);
             } else {
-                LOGGER.warn("Can not write datafile: " + storagePath, e);
+                LOGGER.warn("Can not write datafile: '" + storagePath + "'", e);
             }
         }
     }
@@ -58,6 +59,7 @@ public class CsvStorageClient implements StorageClient {
     public Optional<List<StorageHostInfoDto>> fetch() {
         var storagePath = Path.of(csvStorageProperties.getPath(), csvStorageProperties.getFileName());
         if (!csvStorageProperties.isEnabled() || Files.notExists(storagePath)) {
+            LOGGER.debug("CSV storage disabled or not exist, using empty data");
             return Optional.empty();
         }
 
@@ -67,13 +69,13 @@ public class CsvStorageClient implements StorageClient {
 
         try {
             try (Reader fileReader = Files.newBufferedReader(storagePath)) {
+                LOGGER.debug("Reading storage data from: '{}'", storagePath);
                 MappingIterator<StorageHostInfoDto> hostInfoIterator = reader.readValues(fileReader);
                 return Optional.of(hostInfoIterator.readAll());
             }
         } catch (IOException e) {
-            LOGGER.warn("Can not read datafile: " + storagePath, e);
+            LOGGER.warn("Can not read datafile: '" + storagePath + "'", e);
         }
-
         return Optional.empty();
     }
 }

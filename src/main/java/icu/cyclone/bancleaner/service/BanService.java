@@ -15,15 +15,17 @@ public class BanService {
     private final UnbanDecisionService decisionService;
 
     public void autoClean() {
+        LOGGER.info("Auto clean process started");
         fail2BanService.fetchBannedIpSet().stream()
             .map(hostInfoService::getHostInfo)
             .filter(decisionService::isUnban)
             .forEach(this::unban);
         hostInfoService.storeDatabase();
+        LOGGER.info("Auto clean process finished");
     }
 
     private void unban(HostInfo hostInfo) {
-        LOGGER.debug("Unban host: " + hostInfo.getIp());
+        LOGGER.info("Unban host: " + hostInfo.getIp());
         fail2BanService.unban(hostInfo.getIp());
         hostInfoService.unbanCountIncrement(hostInfo);
     }

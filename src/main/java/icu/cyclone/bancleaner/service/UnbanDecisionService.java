@@ -27,19 +27,35 @@ public class UnbanDecisionService {
     }
 
     private boolean inBlackList(HostInfo hostInfo) {
-        return isPresentInList(hostInfo, properties.getBlackList());
+        var present = isPresentInList(hostInfo, properties.getBlackList());
+        if (present) {
+            LOGGER.info("Host '{}' found in black list", hostInfo.getIp());
+        }
+        return present;
     }
 
     private boolean inBlackListRules(HostInfo hostInfo) {
-        return isPresentInListRules(hostInfo, properties.getBlackListRules());
+        var present = isPresentInListRules(hostInfo, properties.getBlackListRules());
+        if (present) {
+            LOGGER.info("Host '{}' found in black list rules", hostInfo.getIp());
+        }
+        return present;
     }
 
     private boolean inWhiteList(HostInfo hostInfo) {
-        return isPresentInList(hostInfo, properties.getWhiteList());
+        var present = isPresentInList(hostInfo, properties.getWhiteList());
+        if (present) {
+            LOGGER.info("Host '{}' found in white list", hostInfo.getIp());
+        }
+        return present;
     }
 
     private boolean inWhiteListRules(HostInfo hostInfo) {
-        return isPresentInListRules(hostInfo, properties.getWhiteListRules());
+        var present = isPresentInListRules(hostInfo, properties.getWhiteListRules());
+        if (present) {
+            LOGGER.info("Host '{}' found in white list rules", hostInfo.getIp());
+        }
+        return present;
     }
 
     private boolean isPresentInList(HostInfo hostInfo, List<String> list) {
@@ -50,7 +66,7 @@ public class UnbanDecisionService {
             .findAny();
 
         if (successRegex.isPresent()) {
-            LOGGER.info("Host " + ip + " found by regex: " + successRegex.get());
+            LOGGER.debug("Host '{}' found by regex: '{}'", ip, successRegex.get());
             return true;
         }
         return false;
@@ -61,7 +77,7 @@ public class UnbanDecisionService {
         for (var fieldName : fieldNames) {
             var value = getStringValue(fieldName, hostInfo);
             if (value != null && listRules.get(fieldName).contains(value)) {
-                LOGGER.info("Host " + hostInfo.getIp() + " found by field " + fieldName + ": " + value);
+                LOGGER.debug("Host '{}' found by field '{}' with value '{}'", hostInfo.getIp(), fieldName, value);
                 return true;
             }
         }
@@ -76,7 +92,7 @@ public class UnbanDecisionService {
             field.setAccessible(false);
             return value;
         }
-        LOGGER.warn("Parameter \"" + fieldName + "\" not found");
+        LOGGER.warn("Rule parameter '{}' not found", fieldName);
         return null;
     }
 }

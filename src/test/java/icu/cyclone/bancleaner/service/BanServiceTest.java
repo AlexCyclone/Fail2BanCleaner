@@ -15,7 +15,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-@SpringBootTest(classes = {BanService.class})
+@SpringBootTest(classes = {BanService.class, CalendarService.class})
 @ExtendWith(SpringExtension.class)
 class BanServiceTest {
 

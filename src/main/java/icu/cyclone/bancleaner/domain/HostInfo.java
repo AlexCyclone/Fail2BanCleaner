@@ -1,16 +1,17 @@
 package icu.cyclone.bancleaner.domain;
 
 import java.util.Calendar;
+import java.util.Objects;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import org.hibernate.Hibernate;
 
 @Entity
 @Table(name = "HostInfo")
@@ -19,10 +20,8 @@ import lombok.ToString;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @ToString(onlyExplicitlyIncluded = true)
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class HostInfo {
     @Id
-    @EqualsAndHashCode.Include
     @ToString.Include
     private String ip;
 
@@ -39,4 +38,17 @@ public class HostInfo {
     private String org;
     private String isp;
     private String message;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
+        HostInfo hostInfo = (HostInfo) o;
+        return ip != null && Objects.equals(ip, hostInfo.ip);
+    }
+
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
+    }
 }

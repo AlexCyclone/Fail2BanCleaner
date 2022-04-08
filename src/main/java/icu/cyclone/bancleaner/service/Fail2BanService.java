@@ -21,16 +21,16 @@ public class Fail2BanService {
 
     public Set<String> fetchBannedIpSet() {
         String bannedData = consoleClient.execute(commandProperties.getBannedData());
-        LOGGER.debug("Banned data: " + bannedData);
+        LOGGER.debug("Banned data: '{}'", bannedData);
         return consoleConverter.toIpSet(bannedData);
     }
 
     public void unban(String ipAddress) {
-        LOGGER.debug("Unban " + ipAddress);
+        LOGGER.debug("Unban '{}'", ipAddress);
         String response = consoleClient.execute(
             String.format(commandProperties.getUnbanHost(), ipAddress)
         );
-        LOGGER.debug("Unban response: " + response);
+        LOGGER.debug("Unban response: '{}'", response);
         validateUnbanResponse(response);
     }
 
@@ -38,7 +38,6 @@ public class Fail2BanService {
         try {
             Integer.parseInt(response.trim());
         } catch (NumberFormatException e) {
-            LOGGER.error("Incorrect unban response: " + response);
             throw new Fail2BanServiceException("Incorrect unban response: " + response);
         }
     }

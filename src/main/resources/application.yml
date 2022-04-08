@@ -20,7 +20,10 @@ feign:
     jackson:
       enabled: true
 logging:
-  level.root: INFO
+  level:
+    root: OFF
+    icu.cyclone.bancleaner.BanCleanerApplication: OFF
+    icu.cyclone.bancleaner: INFO
   file:
     name: unban.log
 console:

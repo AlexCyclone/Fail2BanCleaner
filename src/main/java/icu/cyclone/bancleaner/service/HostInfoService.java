@@ -31,15 +31,17 @@ public class HostInfoService {
     }
 
     public void unbanCountIncrement(HostInfo hostInfo) {
+        var newBannedCount = hostInfo.getUnbannedCount() + 1;
+        LOGGER.info("Host '{}' unbanned '{}' times", hostInfo.getIp(), newBannedCount);
         dataService.save(
             hostInfo.toBuilder()
-                .unbannedCount(hostInfo.getUnbannedCount() + 1)
+                .unbannedCount(newBannedCount)
                 .build()
         );
     }
 
     private HostInfo getFirsTimeBanned(String ipAddress) {
-        LOGGER.debug("Load whois info: " + ipAddress);
+        LOGGER.info("Load whois info: '{}'", ipAddress);
         var hostInfo = whoIsService.getHostInfo(ipAddress).toBuilder()
             .firstBannedDate(calendarService.getCalendar())
             .build();
@@ -54,7 +56,7 @@ public class HostInfoService {
     }
 
     private HostInfo getUpdatedHostInfo(HostInfo hostInfo) {
-        LOGGER.debug("Update whois info: " + hostInfo.getIp());
+        LOGGER.info("Update whois info: '{}'", hostInfo.getIp());
         var updatedHostInfo = whoIsService.getHostInfo(hostInfo.getIp()).toBuilder()
             .unbannedCount(hostInfo.getUnbannedCount())
             .firstBannedDate(hostInfo.getFirstBannedDate())

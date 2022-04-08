@@ -11,17 +11,21 @@ import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 import javax.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
 public class HostInfoDataService {
+    private static final Logger LOGGER = LoggerFactory.getLogger(HostInfoDataService.class);
     private final HostInfoRepository repository;
     private final StorageClient storageClient;
     private final StorageHostInfoDtoConverter converter;
 
     @PostConstruct
     private void loadStoredData() {
+        LOGGER.info("Loading stored database");
         deleteAll();
         var hostInfoList = storageClient.fetch()
             .orElseGet(Collections::emptyList)
@@ -32,6 +36,7 @@ public class HostInfoDataService {
     }
 
     public void storeDatabase() {
+        LOGGER.info("Saving database");
         storageClient.save(
             findAll().stream()
                 .map(converter::toStorageHostInfoDto)
@@ -52,8 +57,8 @@ public class HostInfoDataService {
     }
 
     public List<HostInfo> findAll() {
-        var allHostInfo = repository.findAll().spliterator();
-        return StreamSupport.stream(allHostInfo, false)
+        var allHostInfo = repository.findAll();
+        return StreamSupport.stream(allHostInfo.spliterator(), false)
             .collect(Collectors.toList());
     }
 

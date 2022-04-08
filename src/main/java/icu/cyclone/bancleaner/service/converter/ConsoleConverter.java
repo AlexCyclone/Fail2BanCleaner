@@ -4,13 +4,10 @@ import icu.cyclone.bancleaner.exception.Fail2BanServiceException;
 import java.util.Arrays;
 import java.util.Set;
 import java.util.stream.Collectors;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 @Component
 public class ConsoleConverter {
-    private static final Logger LOGGER = LoggerFactory.getLogger(ConsoleConverter.class);
     private static final String BANNED_LINE_SIGNATURE = "Banned IP list";
     private static final String START_BANNED_LINE_REGEXP = ".*" + BANNED_LINE_SIGNATURE + "[\\p{P}\\s]+";
     private static final String EMPTY_STRING = "";
@@ -29,8 +26,7 @@ public class ConsoleConverter {
 
     private void validateBannedIp(String consoleData) {
         if (!consoleData.contains(BANNED_LINE_SIGNATURE)) {
-            LOGGER.error("Incorrect banned ip data: " + consoleData);
-            throw new Fail2BanServiceException("Incorrect banned ip data");
+            throw new Fail2BanServiceException("Incorrect banned ip data: " + consoleData);
         }
     }
 }
