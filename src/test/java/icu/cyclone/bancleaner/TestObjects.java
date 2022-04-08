@@ -7,7 +7,7 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 
 public class TestObjects {
-    public static final Calendar TEST_DATE = new GregorianCalendar(2022, 0 , 1);
+    public static final Calendar TEST_DATE = new GregorianCalendar(2022, Calendar.JANUARY, 1);
     public static final StorageHostInfoDto TEMPLATE_STORAGE_HOST_INFO_DTO = StorageHostInfoDto.builder()
         .ip("8.8.8.8")
         .unbannedCount(0)

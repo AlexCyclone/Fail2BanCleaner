@@ -61,7 +61,7 @@ class HostInfoServiceTest {
     @Test
     public void getHostInfoTest() {
         when(dataService.find(anyString())).thenReturn(Optional.of(TEMPLATE_HOST_INFO));
-        var calendar = new GregorianCalendar(2022, 0 , 1);
+        var calendar = new GregorianCalendar(2022, Calendar.JANUARY, 1);
         calendar.add(Calendar.DAY_OF_MONTH, -1);
         when(calendarService.getCalendar()).thenReturn(calendar);
         var result = hostInfoService.getHostInfo("8.8.8.8");
@@ -74,7 +74,7 @@ class HostInfoServiceTest {
     @Test
     public void getHostInfoFirstTest() {
         when(dataService.find(anyString())).thenReturn(Optional.empty());
-        var calendar = new GregorianCalendar(2022, 1 , 1);
+        var calendar = new GregorianCalendar(2022, Calendar.FEBRUARY, 1);
         when(calendarService.getCalendar()).thenReturn(calendar);
         when(whoIsService.getHostInfo(anyString())).thenReturn(TEMPLATE_HOST_INFO);
         var result = hostInfoService.getHostInfo("8.8.8.8");
@@ -87,7 +87,7 @@ class HostInfoServiceTest {
     @Test
     public void getHostInfoExpiredTest() {
         when(dataService.find(anyString())).thenReturn(Optional.of(TEMPLATE_HOST_INFO));
-        var calendar = new GregorianCalendar(2022, 0 , 1);
+        var calendar = new GregorianCalendar(2022, Calendar.JANUARY, 1);
         calendar.add(Calendar.DAY_OF_MONTH, 32);
         when(calendarService.getCalendar()).thenReturn(calendar);
         when(whoIsService.getHostInfo(anyString()))

@@ -37,7 +37,9 @@ class UnbanDecisionServiceTest {
             Arguments.of(TEMPLATE_HOST_INFO.toBuilder().countryCode("UA").build(), true),
             Arguments.of(TEMPLATE_HOST_INFO.toBuilder().countryCode("GB").build(), true),
             Arguments.of(TEMPLATE_HOST_INFO.toBuilder().latitude(37.3860518).build(), true),
-            Arguments.of(TEMPLATE_HOST_INFO.toBuilder().unbannedCount(99).build(), true)
+            Arguments.of(TEMPLATE_HOST_INFO.toBuilder().unbannedCount(99).build(), true),
+            Arguments.of(TEMPLATE_HOST_INFO.toBuilder().countryCode("UA").ip("172.31.0.5").build(), false),
+            Arguments.of(TEMPLATE_HOST_INFO.toBuilder().ip("10.50.100.3").region("Donetsk Oblast").build(), false)
         );
     }
 }
