@@ -19,7 +19,10 @@ feign:
   autoconfiguration:
     jackson:
       enabled: true
-logging.level.root: WARN
+logging:
+  level.root: INFO
+  file:
+    name: unban.log
 console:
   ssh:
     connection:
