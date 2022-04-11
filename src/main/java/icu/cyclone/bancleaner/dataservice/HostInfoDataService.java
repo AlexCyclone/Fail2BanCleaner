@@ -22,6 +22,7 @@ public class HostInfoDataService {
     private final HostInfoRepository repository;
     private final StorageClient storageClient;
     private final StorageHostInfoDtoConverter converter;
+    private long changesCount;
 
     @PostConstruct
     private void loadStoredData() {
@@ -33,23 +34,31 @@ public class HostInfoDataService {
             .map(converter::toHostInfo)
             .collect(Collectors.toList());
         saveAll(hostInfoList);
+        changesCount = 0;
     }
 
     public void storeDatabase() {
-        LOGGER.info("Saving database");
-        storageClient.save(
-            findAll().stream()
-                .map(converter::toStorageHostInfoDto)
-                .collect(Collectors.toList())
-        );
+        if (changesCount > 0) {
+            LOGGER.info("Saving database");
+            storageClient.save(
+                findAll().stream()
+                    .map(converter::toStorageHostInfoDto)
+                    .collect(Collectors.toList())
+            );
+            changesCount = 0;
+        } else {
+            LOGGER.debug("No changes in database since last load.");
+        }
     }
 
     public void saveAll(Iterable<HostInfo> hostInfoList) {
         repository.saveAll(hostInfoList);
+        changesCount++;
     }
 
     public void save(HostInfo hostInfo) {
         repository.save(hostInfo);
+        changesCount++;
     }
 
     public Optional<HostInfo> find(String ip) {
@@ -64,5 +73,6 @@ public class HostInfoDataService {
 
     public void deleteAll() {
         repository.deleteAll();
+        changesCount++;
     }
 }

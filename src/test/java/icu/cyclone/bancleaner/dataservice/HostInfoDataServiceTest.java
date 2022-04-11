@@ -12,6 +12,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.context.TestConfiguration;
@@ -28,7 +29,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.anyList;
+import static org.mockito.Mockito.clearInvocations;
 import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(SpringExtension.class)
@@ -45,6 +49,10 @@ class HostInfoDataServiceTest {
 
     @Autowired
     public HostInfoDataService dataService;
+
+    @Qualifier("getStorageClient")
+    @Autowired
+    public StorageClient storageClient;
 
     @Test
     public void saveTest() {
@@ -94,7 +102,16 @@ class HostInfoDataServiceTest {
 
     @Test
     public void storeDatabaseTest() {
+        var hostIp = "1.1.1.1";
+        var hostInfo = TEMPLATE_HOST_INFO.toBuilder().ip(hostIp).build();
+        dataService.save(hostInfo);
+
         assertDoesNotThrow(() -> dataService.storeDatabase());
+        verify(storageClient, times(1)).save(anyList());
+        clearInvocations(storageClient);
+
+        assertDoesNotThrow(() -> dataService.storeDatabase());
+        verify(storageClient, times(0)).save(anyList());
     }
 
     @TestConfiguration
