@@ -9,7 +9,8 @@ import org.springframework.validation.annotation.Validated;
 @ConfigurationProperties(prefix = "console.ssh.connection")
 public class SshConnectionProperties {
     private String username;
-    private String password;
+    private String passwordPath = System.getProperty("user.dir");
+    private String passwordFile;
     private String host;
     private int port;
     private String strictHostKey;

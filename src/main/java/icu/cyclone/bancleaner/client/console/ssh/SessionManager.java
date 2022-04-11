@@ -15,6 +15,7 @@ class SessionManager implements AutoCloseable {
     private static final String STRICT_HK = "StrictHostKeyChecking";
 
     private final SshConnectionProperties connectionProperties;
+    private final String password;
     private Session session = null;
 
     @Generated
@@ -25,7 +26,7 @@ class SessionManager implements AutoCloseable {
             connectionProperties.getHost(),
             connectionProperties.getPort()
         );
-        session.setPassword(connectionProperties.getPassword());
+        session.setPassword(password);
         session.setConfig(STRICT_HK, connectionProperties.getStrictHostKey());
         session.connect();
         LOGGER.debug("SSH session opened");

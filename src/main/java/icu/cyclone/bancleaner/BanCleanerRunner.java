@@ -13,11 +13,11 @@ import org.springframework.stereotype.Component;
 @Component
 @Profile("!test")
 @RequiredArgsConstructor
+@Generated
 public class BanCleanerRunner implements CommandLineRunner {
     private static final Logger LOGGER = LoggerFactory.getLogger(BanService.class);
     private final BanService banService;
 
-    @Generated
     @Override
     public void run(String... args) {
         try {

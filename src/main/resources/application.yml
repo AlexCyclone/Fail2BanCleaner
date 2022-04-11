@@ -21,16 +21,18 @@ feign:
       enabled: true
 logging:
   level:
-    root: OFF
-    icu.cyclone.bancleaner.BanCleanerApplication: OFF
+    root: ERROR
+    icu.cyclone.bancleaner.BanCleanerApplication: ERROR
     icu.cyclone.bancleaner: INFO
   file:
     name: unban.log
+  pattern:
+    file: "%d{${LOG_DATEFORMAT_PATTERN:yyyy-MM-dd HH:mm:ss.SSS}} ${LOG_LEVEL_PATTERN:%5p} ${PID:- } --- [%t] %-40.40logger{39} : %m%nopex%n}"
 console:
   ssh:
     connection:
       username: monitor
-      password: password
+      passwordFile: ".passwd"
       host: 127.0.0.1
       port: 13022
       strictHostKey: "no"

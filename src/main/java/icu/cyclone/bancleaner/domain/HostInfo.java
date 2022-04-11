@@ -8,6 +8,7 @@ import javax.persistence.Table;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Generated;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
@@ -39,6 +40,7 @@ public class HostInfo {
     private String isp;
     private String message;
 
+    @Generated
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -47,6 +49,7 @@ public class HostInfo {
         return ip != null && Objects.equals(ip, hostInfo.ip);
     }
 
+    @Generated
     @Override
     public int hashCode() {
         return getClass().hashCode();
