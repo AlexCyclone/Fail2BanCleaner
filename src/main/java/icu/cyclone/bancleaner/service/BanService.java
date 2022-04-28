@@ -1,6 +1,8 @@
 package icu.cyclone.bancleaner.service;
 
 import icu.cyclone.bancleaner.domain.HostInfo;
+import java.util.List;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,10 +18,7 @@ public class BanService {
 
     public void autoClean() {
         LOGGER.info("Auto clean process started");
-        fail2BanService.fetchBannedIpSet().stream()
-            .map(hostInfoService::getHostInfo)
-            .filter(decisionService::isUnban)
-            .forEach(this::unban);
+        getUnbanList().forEach(this::unban);
         hostInfoService.storeDatabase();
         LOGGER.info("Auto clean process finished");
     }
@@ -28,5 +27,13 @@ public class BanService {
         LOGGER.info("Unban host: " + hostInfo.getIp());
         fail2BanService.unban(hostInfo.getIp());
         hostInfoService.unbanCountIncrement(hostInfo);
+    }
+
+    private List<HostInfo> getUnbanList() {
+        return fail2BanService.fetchBannedIpSet().stream()
+            .parallel()
+            .map(hostInfoService::getHostInfo)
+            .filter(decisionService::isUnban)
+            .collect(Collectors.toList());
     }
 }
