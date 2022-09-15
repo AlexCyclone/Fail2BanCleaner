@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ReflectionUtils;
+import org.springframework.util.StringUtils;
 
 @Service
 @RequiredArgsConstructor
@@ -85,14 +86,16 @@ public class UnbanDecisionService {
     }
 
     private String getStringValue(String fieldName, HostInfo hostInfo) {
-        var field = ReflectionUtils.findField(HostInfo.class, fieldName);
-        if (field != null) {
-            ReflectionUtils.makeAccessible(field);
-            var value = String.valueOf(ReflectionUtils.getField(field, hostInfo));
-            field.setAccessible(false);
-            return value;
+
+        var getter = ReflectionUtils.findMethod(HostInfo.class, getGetterName(fieldName));
+        if (getter != null) {
+            return String.valueOf(ReflectionUtils.invokeMethod(getter, hostInfo));
         }
         LOGGER.warn("Rule parameter '{}' not found", fieldName);
         return null;
+    }
+
+    private String getGetterName(String fieldName) {
+        return "get" + StringUtils.capitalize(fieldName);
     }
 }

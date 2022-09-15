@@ -26,10 +26,6 @@ public class HostInfoService {
         return isExpired(hostInfo) ? getUpdatedHostInfo(hostInfo) : hostInfo;
     }
 
-    public void storeDatabase() {
-        dataService.storeDatabase();
-    }
-
     public void unbanCountIncrement(HostInfo hostInfo) {
         var newBannedCount = hostInfo.getUnbannedCount() + 1;
         LOGGER.info("Host '{}' unbanned '{}' times", hostInfo.getIp(), newBannedCount);

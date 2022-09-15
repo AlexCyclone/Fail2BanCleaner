@@ -43,12 +43,6 @@ class HostInfoServiceTest {
     public CalendarService calendarService;
 
     @Test
-    public void storeDatabaseTest() {
-        hostInfoService.storeDatabase();
-        verify(dataService, times(1)).storeDatabase();
-    }
-
-    @Test
     public void unbanCountIncrementTest() {
         ArgumentCaptor<HostInfo> argument = ArgumentCaptor.forClass(HostInfo.class);
 

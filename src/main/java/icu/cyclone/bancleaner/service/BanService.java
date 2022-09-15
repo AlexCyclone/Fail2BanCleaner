@@ -19,7 +19,6 @@ public class BanService {
     public void autoClean() {
         LOGGER.info("Auto clean process started");
         getUnbanList().forEach(this::unban);
-        hostInfoService.storeDatabase();
         LOGGER.info("Auto clean process finished");
     }
 

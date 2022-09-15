@@ -1,4 +1,4 @@
-package icu.cyclone.bancleaner.repository;
+package icu.cyclone.bancleaner.dataservice.repository;
 
 import icu.cyclone.bancleaner.domain.HostInfo;
 import org.springframework.data.repository.CrudRepository;

@@ -2,7 +2,7 @@ package icu.cyclone.bancleaner.dataservice;
 
 import icu.cyclone.bancleaner.client.storage.StorageClient;
 import icu.cyclone.bancleaner.domain.HostInfo;
-import icu.cyclone.bancleaner.repository.HostInfoRepository;
+import icu.cyclone.bancleaner.dataservice.repository.HostInfoRepository;
 import icu.cyclone.bancleaner.service.converter.StorageHostInfoDtoConverter;
 import java.util.Collections;
 import java.util.List;
@@ -10,6 +10,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,7 +38,8 @@ public class HostInfoDataService {
         changesCount = 0;
     }
 
-    public void storeDatabase() {
+    @PreDestroy
+    protected void storeDatabase() {
         if (changesCount > 0) {
             LOGGER.info("Saving database");
             storageClient.save(

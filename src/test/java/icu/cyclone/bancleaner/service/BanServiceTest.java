@@ -44,7 +44,6 @@ class BanServiceTest {
 
         verify(fail2BanService, times(0)).unban(anyString());
         verify(hostInfoService, times(0)).unbanCountIncrement(any());
-        verify(hostInfoService,times(1)).storeDatabase();
     }
 
     @Test
@@ -60,6 +59,5 @@ class BanServiceTest {
 
         verify(fail2BanService, times(1)).unban(anyString());
         verify(hostInfoService, times(1)).unbanCountIncrement(any());
-        verify(hostInfoService,times(1)).storeDatabase();
     }
 }
