@@ -1,0 +1,39 @@
+logging:
+  level:
+    root: ERROR
+    icu.cyclone.bancleaner.BanCleanerApplication: ERROR
+    icu.cyclone.bancleaner: INFO
+  file:
+    name: "log/unban.log"
+  pattern:
+    file: "%d{${LOG_DATEFORMAT_PATTERN:yyyy-MM-dd HH:mm:ss.SSS}} ${LOG_LEVEL_PATTERN:%5p} ${PID:- } --- [%t] %-40.40logger{39} : %m%nopex%n}"
+console:
+  ssh:
+    connection:
+      username: monitor
+      passwordFile: "config/.passwd"
+      host: 10.50.100.3
+      port: 13022
+      strictHostKey: "no"
+      executionTimeoutMillis: 3000
+  command:
+    bannedData: "sudo fail2ban-client status | sed -n \"s/,//g;s/.*Jail list://p\" | xargs -n1 sudo fail2ban-client status | grep \"Banned IP\\|Status\""
+    unbanHost: "sudo fail2ban-client unban %s"
+whois:
+  url: "http://ipwhois.app/json"
+storage:
+  csv:
+    fileName: "data/banned.csv"
+  whoIsExpirationPeriodDays: 31
+unban:
+  # Wildcard matching by ip. * - many symbols, ? - one symbol
+  blackList: [ "185.253.42.209" ]
+  # Complete matching by field.
+  blackListRules:
+    region: [ "Donetsk Oblast" ]
+    city: [ "Donetsk Oblast" ]
+  # Wildcard matching by ip.
+  whiteList: [ "10.50.100.*" ]
+  # Complete matching by field.
+  whiteListRules:
+    countryCode: [ UA ]
